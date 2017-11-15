@@ -1,0 +1,217 @@
+{extend name="common/layout" /}
+
+{block name="content"}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                {if condition="'undeleted'==$type"}
+                <a href="{:url('set')}" data-toggle="tooltip" title="新增" class="btn btn-primary"> <i class="fa fa-plus"></i>
+                </a>
+                <button type="button" data-toggle="tooltip" title="删除" class="btn btn-danger" onclick="confirm('确认？') ? $('#form-index').submit() : false;">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+                <a href="{:url('trash')}" data-toggle="tooltip" title="回收站" class="btn btn-info"> <i class="fa fa-recycle"></i>
+                </a>
+                <button type="button" data-toggle="tooltip" title="组合" class="btn btn-success" onclick="if(confirm('确认？')) {$('#input-operate').val('group');$('#form-index').submit();} else {return false;}">
+                    <i class="fa fa-group"></i>
+                </button>
+                {elseif condition="'deleted'==$type"}
+                <button type="button" data-toggle="tooltip" title="彻底删除" class="btn btn-danger" onclick="if(confirm('确认？')){$('#input-operate').val('shiftDelete');$('#form-index').submit()}else{return false;}">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+                <button type="button" data-toggle="tooltip" title="恢复" class="btn btn-success" onclick="if(confirm('确认？')){$('#input-operate').val('restore');$('#form-index').submit()}else{return false;}">
+                    <i class="fa fa-undo"></i>
+                </button>
+                <a href="{:url('index')}" data-toggle="tooltip" title="列表" class="btn btn-info"> <i class="fa fa-list"></i>
+                </a>
+                {/if}
+            </div>
+            <h1>产品管理</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="{:url('site/index')}">首页</a>
+                </li>
+                <li>
+                    <a href="{:url('index')}">产品管理</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-list"></i>
+                    产品列表
+                </h3>
+            </div>
+            <div class="panel-body">
+                <form action="{:url('index')}" method="get">
+                    <div class="well">
+                        <div class="row">
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_title">名称</label>
+                                    <input type="text" name="filter_title" value="{$filter['filter_title']|default=''}" placeholder="名称" id="input-filter_title" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_upc">通用代码</label>
+                                    <input type="text" name="filter_upc" value="{$filter['filter_upc']|default=''}" placeholder="通用代码" id="input-filter_upc" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_image">图像</label>
+                                    <input type="text" name="filter_image" value="{$filter['filter_image']|default=''}" placeholder="图像" id="input-filter_image" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_stock_status_id">库存状态</label>
+                                    <input type="text" name="filter_stock_status_id" value="{$filter['filter_stock_status_id']|default=''}" placeholder="库存状态" id="input-filter_stock_status_id" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_is_subtract">扣减库存</label>
+                                    <input type="text" name="filter_is_subtract" value="{$filter['filter_is_subtract']|default=''}" placeholder="扣减库存" id="input-filter_is_subtract" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_price">售价</label>
+                                    <input type="text" name="filter_price" value="{$filter['filter_price']|default=''}" placeholder="售价" id="input-filter_price" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_is_sale">上架</label>
+                                    <input type="text" name="filter_is_sale" value="{$filter['filter_is_sale']|default=''}" placeholder="上架" id="input-filter_is_sale" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_brand_id">品牌</label>
+                                    <input type="text" name="filter_brand_id" value="{$filter['filter_brand_id']|default=''}" placeholder="品牌" id="input-filter_brand_id" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_category_id">分类</label>
+                                    <input type="text" name="filter_category_id" value="{$filter['filter_category_id']|default=''}" placeholder="分类" id="input-filter_category_id" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label" for="input-filter_admin_id">创建管理员id</label>
+                                    <input type="text" name="filter_admin_id" value="{$filter['filter_admin_id']|default=''}" placeholder="创建管理员id" id="input-filter_admin_id" class="form-control" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <button type="submit" id="button-filter" class="btn btn-primary pull-right">
+                                    <i class="fa fa-search"></i>
+                                    筛选
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <form action="{:url('multi')}" method="post" id="form-index">
+                    <input type="hidden" name="operate" value="delete" id="input-operate">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center">
+                                    <input type="checkbox" onclick="$('input[name=\'selected[]\']').prop('checked', this.checked);" />
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'title')}" class="{:classOrder($order, 'title')}">名称</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'group_id')}" class="{:classOrder($order, 'group_id')}">组</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'upc')}" class="{:classOrder($order, 'upc')}">通用代码</a>
+                                </td>
+                                <td class="text-center">缩略图</td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'stock_status_id')}" class="{:classOrder($order, 'stock_status_id')}">库存状态</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'price')}" class="{:classOrder($order, 'price')}">售价</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'is_sale')}" class="{:classOrder($order, 'is_sale')}">上架</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'admin_id')}" class="{:classOrder($order, 'admin_id')}">创建管理员id</a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index', $filter, $order, 'meta_keywords')}" class="{:classOrder($order, 'meta_keywords')}">SEO关键字</a>
+                                </td>
+
+                                <td class="text-right">管理</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {if condition="$paginater->total() > 0"}
+                            {foreach $paginater as $row}
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" name="selected[]" value="{$row['id']}" />
+                                </td>
+                                <td class="text-left">{$row['title']|htmlspecialchars}</td>
+                                <td class="text-left">
+                                    <a href="{:url('group/set', ['id'=>$row['group']['id']])}">{$row['group']['title']}</a></td>
+                                <td class="text-left">{$row['upc']|htmlspecialchars}</td>
+                                <td class="text-left">
+                                    <img src="__ROOT__/thumb/product/{$row['image_thumb']}" alt="" style="max-height:60px;"></td>
+                                <td class="text-left">{$row['stock_status_id']|htmlspecialchars}</td>
+                                <td class="text-left">{$row['price']|htmlspecialchars}</td>
+                                <td class="text-left">{$row['is_sale']|htmlspecialchars}</td>
+                                <td class="text-left">{$row['admin_id']|htmlspecialchars}</td>
+                                <td class="text-left">{$row['meta_keywords']|htmlspecialchars}</td>
+
+                                <td class="text-right">
+                                    <a href="{:url('set', ['id'=>$row['id']])}" data-toggle="tooltip" title="编辑" class="btn btn-primary">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <a href="{:url('copy', ['id'=>$row['id']])}" data-toggle="tooltip" title="复制" class="btn btn-success">
+                                        <i class="fa fa-copy"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {/foreach}
+                            {else/}
+                            <tr>
+                                <td class="text-center" colspan="10">
+                                    无记录
+                                </td>
+                            </tr>
+                            {/if}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+                <div class="row">
+                    <div class="col-sm-6 text-left">
+                        {$paginater->render()}
+                    </div>
+                    <div class="col-sm-6 text-right">显示开始 {$start} 到 {$end} 之 {$paginater->total()} （总 {$paginater->lastPage()} 页）</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}

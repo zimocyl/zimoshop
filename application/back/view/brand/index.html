@@ -1,0 +1,129 @@
+{extend name="common/layout"/}
+{block name="title"}品牌列表{/block}
+{block name="content"}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <a href="{:url('set')}" data-toggle="tooltip" title="新增" class="btn btn-primary {if condition="!checkPriv('brand-create')"}disabled{/if}"> <i class="fa fa-plus"></i>
+                </a>
+                <button type="button" data-toggle="tooltip" title="删除" class="btn btn-danger {if condition="!checkPriv('back/brand/multi')"}disabled{/if}" onclick="confirm('确认？') ? $('#form-product').submit() : false;">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </div>
+            <h1>商品管理</h1>
+            <ul class="breadcrumb">
+                <li>
+                    <a href="">首页</a>
+                </li>
+                <li>
+                    <a href="">商品管理</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-list"></i>
+                    品牌列表
+                </h3>
+            </div>
+            <div class="panel-body">
+                <form action="{:url('index')}" method="get">
+                <div class="well">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label" for="input-title">品牌名称</label>
+                                <input type="text" name="filter_title" value="{$filter['filter_title']|default=''}" placeholder="品牌名称" id="input-title" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label" for="input-site">官网</label>
+                                <input type="text" name="filter_site" value="{$filter['filter_site']|default=''}" placeholder="官网" id="input-site" class="form-control" />
+                            </div>
+                            <button type="submit" id="button-filter" class="btn btn-primary pull-right">
+                                <i class="fa fa-search"></i>
+                                筛选
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                </form>
+                <form action="{:url('multi')}" method="post" enctype="multipart/form-data" id="form-product">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <td style="width: 1px;" class="text-center">
+                                    <input type="checkbox" onclick="$('input[name=\'selected[]\']').prop('checked', this.checked);" />
+                                </td>
+                                <td class="text-center">
+                                    <a href="{:urlOrder('index',$filter,$order,'title')}" class="{:classOrder($order,'title')}">品牌</a>
+                                </td>
+
+                                <td class="text-left">
+                                    Logo
+                                </td>
+                                <td class="text-left">
+                                    <a href="{:urlOrder('index',$filter,$order,'site')}" class="{:classOrder($order,'site')}">官网</a>
+                                </td>
+                                <td class="text-right">
+                                    <a href="{:urlOrder('index',$filter,$order,'sort')}" class="{:classOrder($order,'sort')}">排序</a>
+                                </td>
+
+                                <td class="text-right">管理</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {if $paginater->total()>0}
+                            {foreach $paginater as $row}
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" name="selected[]" value="{$row['id']}" />
+                                </td>
+                                <td class="text-center">
+                                    {$row['title']}
+                                </td>
+                                <td class="text-left"><img src="__ROOT__/upload/brand/{$row['logo']}" alt="Logo" style="width: 40px" class="img-thumbnail"></td>
+                                <td class="text-left">{$row['site']}</td>
+                                <td class="text-right">
+                                    <span style="text-decoration: line-through;"></span>
+                                    <br/>
+                                    <div class="text-danger"></div>
+                                    {$row['sort']}
+                                </td>
+
+
+                                <td class="text-right">
+                                    <a href="{:url('set',['id'=>$row['id']])}" data-toggle="tooltip" title="编辑" class="btn btn-primary {if condition="!checkPriv('brand-edit')"}disabled{/if}">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {/foreach}
+                            {else}
+                            <td class="text-center" colspan="6">
+                                无记录
+                            </td>
+                            {/if}
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-sm-6 text-left">
+                        {$paginater->render()}
+                    </div>
+                    <div class="col-sm-6 text-right">显示开始 {$start} 到 {$end} 之 {$paginater->listRows()} （总 {$paginater->lastPage()}页）</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
